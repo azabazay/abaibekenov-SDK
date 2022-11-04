@@ -9,6 +9,9 @@ import (
 func main() {
 	lotrSDK := sdk.InitFromConfig(sdk.DefaultConfigFileName)
 
-	resp := lotrSDK.GetBook()
+	books, resp := lotrSDK.GetBookList()
 	fmt.Println(resp)
+
+	bookByID, resp := lotrSDK.GetBookByID(books[0].ID)
+	fmt.Println(bookByID)
 }

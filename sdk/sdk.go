@@ -23,18 +23,6 @@ func InitFromConfig(configName string) lotrSDK {
 
 // PUBLIC METHODS
 
-// GetBook gets LOTR book list.
-func (l lotrSDK) GetBook() Response {
-	requestURL := fmt.Sprintf("https://the-one-api.dev/v2/%s", BOOK_URL)
-
-	response, err := l.makeHTTPRequest(requestURL, http.MethodGet, nil)
-	if err != nil {
-		l.processError(err)
-	}
-
-	return response
-}
-
 // END PUBLIC METHODS
 
 // PRIVATE METHODS
@@ -42,7 +30,7 @@ func (l lotrSDK) GetBook() Response {
 func (l lotrSDK) processError(err error) {
 	fmt.Printf("ERROR: %s\n", err.Error())
 
-	os.Exit(1)
+	// os.Exit(1)
 }
 
 func (l *lotrSDK) loadConfig(configFileName string) {
@@ -53,7 +41,6 @@ func (l *lotrSDK) loadConfig(configFileName string) {
 	defer f.Close()
 
 	var cfg Config
-	// decoder := yaml.NewDecoder(f)
 	decoder := json.NewDecoder(f)
 	err = decoder.Decode(&cfg)
 	if err != nil {
@@ -71,19 +58,19 @@ func (l lotrSDK) makeHTTPRequest(url string, method string, body io.Reader) (Res
 		return response, fmt.Errorf("client: could not create request: %s", err)
 	}
 
+	if l.config.Token != "" {
+		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", l.config.Token))
+	}
+
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return response, fmt.Errorf("client: error making http request: %s", err)
 	}
 
-	fmt.Printf("client: got response!\n")
-	fmt.Printf("client: status code: %d\n", res.StatusCode)
-
 	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return response, fmt.Errorf("client: could not read response body: %s", err)
 	}
-	fmt.Printf("client: response body: %s\n", resBody)
 
 	err = json.Unmarshal(resBody, &response)
 	if err != nil {
