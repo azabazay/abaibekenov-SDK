@@ -6,16 +6,16 @@ import (
 )
 
 const (
-	isEqualTo            = "isEqualTo"
-	isNotEqualTo         = "isNotEqualTo"
-	includes             = "includes"
-	excludes             = "excludes"
-	propertyExists       = "propertyExists"
-	propertyNotExists    = "propertyNotExists"
-	regex                = "regex"
-	greaterThan          = "greaterThan"
+	IsEqualTo            = "isEqualTo"
+	IsNotEqualTo         = "isNotEqualTo"
+	Includes             = "includes"
+	Excludes             = "excludes"
+	PropertyExists       = "propertyExists"
+	PropertyNotExists    = "propertyNotExists"
+	Regex                = "regex"
+	GreaterThan          = "greaterThan"
 	LessThan             = "LessThan"
-	greaterThanOrEqualTo = "greaterThanOrEqualTo"
+	GreaterThanOrEqualTo = "greaterThanOrEqualTo"
 	LessThanOrEqualTo    = "LessThanOrEqualTo"
 )
 
@@ -25,14 +25,6 @@ type Filter struct {
 	Value  string
 }
 
-func MakeFilter(option string, field string, value string) Filter {
-	return Filter{
-		Option: option,
-		Field:  field,
-		Value:  value,
-	}
-}
-
 type RequestOptions struct {
 	Limit     int
 	Page      int
@@ -40,17 +32,6 @@ type RequestOptions struct {
 	SortField string
 	SortType  string
 	Filters   []Filter
-}
-
-func MakeRequestOptions(limit int, page int, offset int, sortField string, sortType string, filters []Filter) RequestOptions {
-	return RequestOptions{
-		Limit:     limit,
-		Page:      page,
-		Offset:    offset,
-		SortField: sortField,
-		SortType:  sortType,
-		Filters:   filters,
-	}
 }
 
 func MakeRequestURL(url string, reqOpt RequestOptions) string {
@@ -77,19 +58,19 @@ func encodeRequestOptions(reqOpt RequestOptions) string {
 	}
 
 	for _, f := range reqOpt.Filters {
-		if f.Option == isEqualTo || f.Option == regex {
+		if f.Option == IsEqualTo || f.Option == Regex {
 			params = append(params, fmt.Sprintf("%s=%s", f.Field, f.Value))
-		} else if f.Option == isNotEqualTo {
+		} else if f.Option == IsNotEqualTo {
 			params = append(params, fmt.Sprintf("%s!=%s", f.Field, f.Value))
-		} else if f.Option == includes {
+		} else if f.Option == Includes {
 			params = append(params, fmt.Sprintf("%s=%s", f.Field, f.Value))
-		} else if f.Option == excludes {
+		} else if f.Option == Excludes {
 			params = append(params, fmt.Sprintf("%s=%s", f.Field, f.Value))
-		} else if f.Option == propertyExists {
+		} else if f.Option == PropertyExists {
 			params = append(params, f.Value)
-		} else if f.Option == propertyNotExists {
+		} else if f.Option == PropertyNotExists {
 			params = append(params, f.Value)
-		} else if f.Option == greaterThan {
+		} else if f.Option == GreaterThan {
 			params = append(params, fmt.Sprintf("%s>=%s", f.Field, f.Value))
 		} else if f.Option == LessThan {
 			params = append(params, fmt.Sprintf("%s<=%s", f.Field, f.Value))
