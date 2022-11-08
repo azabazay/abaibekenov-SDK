@@ -71,12 +71,20 @@ func encodeRequestOptions(reqOpt RequestOptions) string {
 		} else if f.Option == PropertyNotExists {
 			params = append(params, f.Value)
 		} else if f.Option == GreaterThan {
-			params = append(params, fmt.Sprintf("%s>=%s", f.Field, f.Value))
+			params = append(params, fmt.Sprintf("%s>%s", f.Field, f.Value))
 		} else if f.Option == LessThan {
+			params = append(params, fmt.Sprintf("%s<%s", f.Field, f.Value))
+		} else if f.Option == GreaterThanOrEqualTo {
+			params = append(params, fmt.Sprintf("%s>=%s", f.Field, f.Value))
+		} else if f.Option == LessThanOrEqualTo {
 			params = append(params, fmt.Sprintf("%s<=%s", f.Field, f.Value))
 		} else {
 			fmt.Printf("ERROR: wrong param name: %s\n", f.Option)
 		}
+	}
+
+	if len(params) == 0 {
+		return ""
 	}
 
 	return "?" + strings.Join(params, "&")

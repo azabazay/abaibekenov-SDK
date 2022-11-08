@@ -3,11 +3,13 @@ package sdk
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/mitchellh/mapstructure"
 )
 
-// GetList gets LOTR book list.
-func (l lotrSDK) GetBookList() ([]Book, Response) {
-	requestURL := fmt.Sprintf("%s/%s", BASE_URL, BOOK_URL)
+// GetBookList gets LOTR book list.
+func (l LotrSDK) GetBookList(reqOpt RequestOptions) ([]Book, Response) {
+	requestURL := MakeRequestURL(fmt.Sprintf("%s/%s", BASE_URL, BOOK_URL), reqOpt)
 
 	response, err := l.makeHTTPRequest(requestURL, http.MethodGet, nil)
 	if err != nil {
@@ -19,17 +21,16 @@ func (l lotrSDK) GetBookList() ([]Book, Response) {
 	var books []Book
 
 	for _, doc := range response.Docs {
-		books = append(books, Book{
-			ID:   doc["_id"].(string),
-			Name: doc["name"].(string),
-		})
+		book := Book{}
+		mapstructure.Decode(doc, &book)
+		books = append(books, book)
 	}
 
 	return books, response
 }
 
 // GetBookByID gets a single LOTR book by ID.
-func (l lotrSDK) GetBookByID(id string) (Book, Response) {
+func (l LotrSDK) GetBookByID(id string) (Book, Response) {
 	requestURL := fmt.Sprintf("%s/%s/%s", BASE_URL, BOOK_URL, id)
 
 	response, err := l.makeHTTPRequest(requestURL, http.MethodGet, nil)
@@ -40,10 +41,8 @@ func (l lotrSDK) GetBookByID(id string) (Book, Response) {
 	}
 
 	doc := response.Docs[0]
-	book := Book{
-		ID:   doc["_id"].(string),
-		Name: doc["name"].(string),
-	}
+	book := Book{}
+	mapstructure.Decode(doc, &book)
 
 	return book, response
 }

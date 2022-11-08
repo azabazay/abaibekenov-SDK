@@ -9,13 +9,13 @@ import (
 	"os"
 )
 
-type lotrSDK struct {
+type LotrSDK struct {
 	config Config
 }
 
 // InitFromConfig initializes lotrSDK from config file.
-func InitFromConfig(configName string) lotrSDK {
-	sdk := lotrSDK{}
+func InitFromConfig(configName string) LotrSDK {
+	sdk := LotrSDK{}
 	sdk.loadConfig(configName)
 
 	return sdk
@@ -27,13 +27,13 @@ func InitFromConfig(configName string) lotrSDK {
 
 // PRIVATE METHODS
 
-func (l lotrSDK) processError(err error) {
+func (l LotrSDK) processError(err error) {
 	fmt.Printf("ERROR: %s\n", err.Error())
 
 	// os.Exit(1)
 }
 
-func (l *lotrSDK) loadConfig(configFileName string) {
+func (l *LotrSDK) loadConfig(configFileName string) {
 	f, err := os.Open(configFileName)
 	if err != nil {
 		l.processError(err)
@@ -50,7 +50,7 @@ func (l *lotrSDK) loadConfig(configFileName string) {
 	l.config = cfg
 }
 
-func (l lotrSDK) makeHTTPRequest(url string, method string, body io.Reader) (Response, error) {
+func (l LotrSDK) makeHTTPRequest(url string, method string, body io.Reader) (Response, error) {
 	var response Response
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
