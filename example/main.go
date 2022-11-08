@@ -9,9 +9,10 @@ import (
 func main() {
 	lotrSDK := sdk.InitFromConfig(sdk.DefaultConfigFileName)
 
-	// exampleBookRequest(lotrSDK)
+	// NOTE: Uncomment to use example requests.
+	exampleBookRequest(lotrSDK)
 	// exampleChapterRequest(lotrSDK)
-	exampleMovieRequest(lotrSDK)
+	// exampleMovieRequest(lotrSDK)
 	// exampleCharacterRequest(lotrSDK)
 	// exampleQuoteRequest(lotrSDK)
 }
